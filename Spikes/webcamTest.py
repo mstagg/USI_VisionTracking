@@ -23,8 +23,8 @@ while(1):
 	# Create upper and lower bound to define what
 	# exactly is 'red'. Values are arbitray and 
 	# results will vary based on these values.
-	lower_red = np.array([50, 50, 120])
-	upper_red = np.array([175, 165, 255])
+	lower_red = np.array([20, 50, 50])
+	upper_red = np.array([194, 194, 244])
 
 	# Create a binary color mask of red pixels
 	mask = cv2.inRange(hsv, lower_red, upper_red)
