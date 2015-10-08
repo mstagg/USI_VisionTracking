@@ -3,7 +3,7 @@ import sys
 import RPi.GPIO as GPIO
 
 # DEBUG MODE
-DEBUG = False
+DEBUG = True
 
 
 GPIO.setmode(GPIO.BOARD)
@@ -19,6 +19,10 @@ cap.set(4, 200) # Y
 # Create the haar cascade
 cascPath = 'res/haarcascade_frontalface_default.xml'
 faceCascade = cv2.CascadeClassifier(cascPath)
+#cascPath = 'res/frontalEyes35x16.xml'
+#eyesCascade = cv2.CascadeClassifier(cascPath)
+cascPath = 'res/haarcascade_eye.xml'
+individualEyeCascade = cv2.CascadeClassifier(cascPath)
 
 while(1):
 	# Get newest frame
@@ -36,9 +40,33 @@ while(1):
     		flags = cv2.cv.CV_HAAR_SCALE_IMAGE
 	)
 
+	# Detect eyes in the image
+	#eyes = eyesCascade.detectMultiScale(
+    	#	gray,
+    	#	scaleFactor=1.1,
+    	#	minNeighbors=5,
+    	#	minSize=(30, 10),
+    	#	flags = cv2.cv.CV_HAAR_SCALE_IMAGE
+	#)
+
+	# Detect individual eyes in the image
+	iEyes = individualEyeCascade.detectMultiScale(
+    		gray,
+    		scaleFactor=1.1,
+    		minNeighbors=5,
+    		minSize=(10, 10),
+    		flags = cv2.cv.CV_HAAR_SCALE_IMAGE
+	)
+
 	# Draw a rectangle around the faces
 	for (x, y, w, h) in faces:
     		cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+
+	#for (x, y, w, h) in eyes:
+    	#	cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 0, 255), 2)
+
+	for (x, y, w, h) in iEyes:
+    		cv2.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
 	# If a face is detected, turn on the LED
 	if(len(faces) < 1):
